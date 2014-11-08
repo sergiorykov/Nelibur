@@ -8,7 +8,7 @@ using Xunit.Extensions;
 
 namespace UnitTests.Nelibur.Sword.Extensions
 {
-    public sealed class BagExtensionsTests
+    public sealed class OptionExtensionsTests
     {
         public static IEnumerable<object[]> EmptyAndNotEmptyBags
         {
