@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Nelibur.Sword.Core;
 
 namespace Nelibur.Sword.Patterns
 {
@@ -30,10 +31,11 @@ namespace Nelibur.Sword.Patterns
             private readonly Dictionary<Type, Action<TBase>> _repository =
                 new Dictionary<Type, Action<TBase>>();
 
-            public void Register<T>(Action<T> action)
+            public IActionVisitor<TBase> Register<T>(Action<T> action)
                 where T : TBase
             {
                 _repository[typeof(T)] = x => action((T)x);
+                return this;
             }
 
             public void Visit<T>(T value)
@@ -50,10 +52,11 @@ namespace Nelibur.Sword.Patterns
             private readonly Dictionary<Type, Func<TBase, TResult>> _repository =
                 new Dictionary<Type, Func<TBase, TResult>>();
 
-            public void Register<T>(Func<T, TResult> action)
+            public IFuncVisitor<TBase, TResult> Register<T>(Func<T, TResult> action)
                 where T : TBase
             {
                 _repository[typeof(T)] = x => action((T)x);
+                return this;
             }
 
             public TResult Visit<T>(T value)
@@ -73,7 +76,7 @@ namespace Nelibur.Sword.Patterns
         /// </summary>
         /// <typeparam name="T">Concrete type.</typeparam>
         /// <param name="action">Action.</param>
-        void Register<T>(Func<T, TResult> action)
+        IFuncVisitor<TBase, TResult> Register<T>(Func<T, TResult> action)
             where T : TBase;
 
         /// <summary>
@@ -93,7 +96,7 @@ namespace Nelibur.Sword.Patterns
         /// </summary>
         /// <typeparam name="T">Concrete type.</typeparam>
         /// <param name="action">Action.</param>
-        void Register<T>(Action<T> action)
+        IActionVisitor<TBase> Register<T>(Action<T> action)
             where T : TBase;
 
         /// <summary>

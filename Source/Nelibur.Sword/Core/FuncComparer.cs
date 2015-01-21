@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Nelibur.Sword
+namespace Nelibur.Sword.Core
 {
     public sealed class FuncComparer<T> : IEqualityComparer<T>
     {

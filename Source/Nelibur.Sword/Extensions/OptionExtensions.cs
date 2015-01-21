@@ -5,7 +5,7 @@ namespace Nelibur.Sword.Extensions
 {
     public static class OptionExtensions
     {
-        public static Option<TInput> Do<TInput>(this Option<TInput> value, Action<TInput> action)
+        public static Option<T> Do<T>(this Option<T> value, Action<T> action)
         {
             if (value.HasValue)
             {
@@ -14,21 +14,7 @@ namespace Nelibur.Sword.Extensions
             return value;
         }
 
-        public static Option<TInput> Do<TInput>(
-            this Option<TInput> value, Func<TInput, bool> predicate, Action<TInput> action)
-        {
-            if (value.HasNoValue)
-            {
-                return value;
-            }
-            if (predicate(value.Value))
-            {
-                action(value.Value);
-            }
-            return value;
-        }
-
-        public static Option<TInput> DoOnEmpty<TInput>(this Option<TInput> value, Action action)
+        public static Option<T> DoOnEmpty<T>(this Option<T> value, Action action)
         {
             if (value.HasNoValue)
             {
@@ -37,7 +23,7 @@ namespace Nelibur.Sword.Extensions
             return value;
         }
 
-        public static Option<TInput> Finally<TInput>(this Option<TInput> value, Action<TInput> action)
+        public static Option<T> Finally<T>(this Option<T> value, Action<T> action)
         {
             action(value.Value);
             return value;
@@ -61,8 +47,7 @@ namespace Nelibur.Sword.Extensions
             return func(value.Value).ToOption();
         }
 
-        public static Option<TResult> Map<TInput, TResult>(
-            this Option<TInput> value, Func<TInput, bool> predicate, Func<TInput, TResult> func)
+        public static Option<TResult> Map<TInput, TResult>(this Option<TInput> value, Func<TInput, bool> predicate, Func<TInput, TResult> func)
         {
             if (value.HasNoValue)
             {
@@ -75,42 +60,27 @@ namespace Nelibur.Sword.Extensions
             return func(value.Value).ToOption();
         }
 
-        public static Option<TResult> MapOnEmpty<TInput, TResult>(this Option<TInput> value, Func<TResult> func)
+        public static Option<T> MapOnEmpty<T>(this Option<T> value, Func<T> func)
         {
             if (value.HasNoValue)
             {
                 return func().ToOption();
             }
-            return Option<TResult>.Empty;
+            return value;
         }
 
-        public static Option<TValue> ThrowOnEmpty<TValue, TException>(this Option<TValue> value)
-            where TException : Exception, new()
+        public static Option<V> SelectMany<T, U, V>(this Option<T> value, Func<T, Option<U>> func, Func<T, U, V> selector)
         {
-            if (value.HasValue)
-            {
-                return value;
-            }
-            throw Error.Type<TException>();
+            return value.Map(x => func(x).Map(y => selector(x, y).ToOption()));
         }
 
-        public static Option<TValue> ThrowOnEmpty<TValue, TException>(this Option<TValue> value, Func<TException> func)
-            where TException : Exception
-        {
-            if (value.HasValue)
-            {
-                return value;
-            }
-            throw func();
-        }
-
-        public static Option<TInput> Where<TInput>(this Option<TInput> value, Func<TInput, bool> predicate)
+        public static Option<T> Where<T>(this Option<T> value, Func<T, bool> predicate)
         {
             if (value.HasNoValue)
             {
-                return Option<TInput>.Empty;
+                return Option<T>.Empty;
             }
-            return predicate(value.Value) ? value : Option<TInput>.Empty;
+            return predicate(value.Value) ? value : Option<T>.Empty;
         }
     }
 }

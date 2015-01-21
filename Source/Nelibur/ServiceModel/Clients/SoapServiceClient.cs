@@ -4,7 +4,7 @@ using System.ServiceModel.Channels;
 using System.Threading.Tasks;
 using Nelibur.ServiceModel.Contracts;
 using Nelibur.ServiceModel.Services.Headers;
-using Nelibur.Sword;
+using Nelibur.Sword.Core;
 
 namespace Nelibur.ServiceModel.Clients
 {
